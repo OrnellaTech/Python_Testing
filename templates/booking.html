@@ -18,7 +18,19 @@
         
         <!-- Bouton pour réserver -->
         <button type="submit" name="action_type" value="purshase">Book</button>
-     
+        <!-- Nouvelle fontionnalité: ajout de bouton retour -->
+        <button type="submit" name="action_type" value="return" id="returnbutton">Retour</button>
+           
     </form>
+
+    <script>
+        const returnbutton = document.getElementById('returnbutton');
+        const placesinput = document.getElementById('places');
+        returnbutton.addEventListener('click', function(){
+            // Retire la contrainte "required" uniquement pour ce clic
+            placesinput.removeAttribute('required');
+        });
+    </script>
+    
 </body>
 </html>
