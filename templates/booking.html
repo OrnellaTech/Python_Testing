@@ -7,6 +7,7 @@
 <body>
     <h2>{{competition['name']}}</h2>
     Places available: {{competition['numberOfPlaces']}}
+    <p>Votre nombre de point : {{ club['points'] }}</p>
     {% set max_reservation = [club['points']|int, competition['numberOfPlaces']|int,12]|min %}
 
     {% if max_reservation <= 0 %}
@@ -15,26 +16,30 @@
             Pas assez de points ou plus de places disponibles.
         </p>
         <a href="{{ url_for('welcome') }}"><button>Retour</button></a>
-        
+
+
+
+    
     {% else %}
     <form action="/purchasePlaces" method="post">
         <input type="hidden" name="club" value="{{club['name']}}">
         <input type="hidden" name="competition" value="{{competition['name']}}">
+        
         <label for="places">How many places?</label>
         <input type="number" name="places" id="places" 
                 min="1" max="{{ max_reservation }}" required>
-        
-         <!--  message de confirmation -->
-        {% with messages = get_flashed_messages()%}
-            {% if messages %}
-                <!-- <ul> -->
-            <ul style="color: green; font-weight: bold;">
-            {% for message in messages %}
-                    <li>{{message}}</li>
-                {% endfor %}
-            </ul>
-            {% endif%}
-        {%endwith%}
+         <!-- <p style="color: red">Vous ne pouvez pas réserver plus de {{ max_reservation }} place{{ max_reservation > 1 and 's' or '' }}.</p> -->
+       <!--  message de confirmation -->
+                {% with messages = get_flashed_messages()%}
+                    {% if messages %}
+                        <!-- <ul> -->
+                    <ul style="color: green; font-weight: bold;">
+                    {% for message in messages %}
+                            <li>{{message}}</li>
+                        {% endfor %}
+                    </ul>
+                    {% endif%}
+                {%endwith%}
 
         <!-- Bouton pour réserver -->
         <button type="submit" name="action_type" value="purshase">Book</button>
