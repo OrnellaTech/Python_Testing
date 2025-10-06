@@ -7,11 +7,18 @@
 <body>
     <h2>{{competition['name']}}</h2>
     Places available: {{competition['numberOfPlaces']}}
+    {% set max_reservation = [club['points']|int, competition['numberOfPlaces']|int,12]|min %}
+
     <form action="/purchasePlaces" method="post">
         <input type="hidden" name="club" value="{{club['name']}}">
         <input type="hidden" name="competition" value="{{competition['name']}}">
-        <label for="places">How many places?</label><input type="number" name="places" id=""/>
-        <button type="submit">Book</button>
+        <label for="places">How many places?</label>
+        <input type="number" name="places" id="places" 
+                min="1" max="{{ max_reservation }}" required>
+        
+        <!-- Bouton pour réserver -->
+        <button type="submit" name="action_type" value="purshase">Book</button>
+     
     </form>
 </body>
 </html>
