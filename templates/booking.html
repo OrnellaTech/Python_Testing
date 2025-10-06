@@ -2,62 +2,220 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Booking for {{competition['name']}} || GUDLFT</title>
+    <title>Réservation | {{competition['name']}} || GUDLFT</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* 🌈 Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(90deg, #d46aff, #8e8aff, #74d9ff);
+            padding: 15px 30px;
+            color: #fff;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        .header-left h3 {
+            font-weight: 500;
+            font-size: 18px;
+        }
+        .logout {
+            background-color: #ff4d4d;
+            color: #fff;
+            padding: 8px 14px;
+            border-radius: 20px;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+        .logout:hover {
+            background-color: #e43c3c;
+        }
+
+        /* 💎 Main container */
+        .container {
+            max-width: 480px;
+            background: #fff;
+            margin: 60px auto;
+            padding: 40px 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        /* 🎯 Title */
+        .container h2 {
+            color: #6a11cb;
+            font-size: 26px;
+            margin-bottom: 10px;
+        }
+        .info {
+            color: #333;
+            font-size: 15px;
+            margin-bottom: 25px;
+        }
+
+        /* ✨ Form style */
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        label {
+            font-weight: 500;
+            color: #444;
+        }
+        input[type="number"] {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            text-align: center;
+            transition: 0.3s;
+        }
+        input[type="number"]:focus {
+            border-color: #8e8aff;
+            box-shadow: 0 0 5px rgba(142, 138, 255, 0.5);
+            outline: none;
+        }
+
+        /* 🧭 Buttons */
+        button {
+            border: none;
+            padding: 10px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+        button[name="action_type"][value="purshase"] {
+            background: linear-gradient(90deg, #74d9ff, #8e8aff);
+            color: white;
+        }
+        button[name="action_type"][value="purshase"]:hover {
+            opacity: 0.9;
+        }
+        button[name="action_type"][value="return"] {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        button[name="action_type"][value="return"]:hover {
+            background-color: #ddd;
+        }
+
+        /* 💬 Flash messages */
+        .messages {
+            margin-top: 15px;
+            list-style: none;
+            padding: 0;
+        }
+        .messages li {
+            font-weight: 500;
+            margin-bottom: 5px;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        .messages li.success {
+            background-color: #e6ffee;
+            color: #1d7a32;
+            border: 1px solid #8ddc9e;
+        }
+        .messages li.error {
+            background-color: #ffeaea;
+            color: #b10000;
+            border: 1px solid #ff9999;
+        }
+        .messages li.warning {
+            background-color: #fff6e5;
+            color: #a76b00;
+            border: 1px solid #ffd280;
+        }
+    </style>
 </head>
 <body>
-    <h2>{{competition['name']}}</h2>
-    Places available: {{competition['numberOfPlaces']}}
-    <p>Votre nombre de point : {{ club['points'] }}</p>
-    {% set max_reservation = [club['points']|int, competition['numberOfPlaces']|int,12]|min %}
 
-    {% if max_reservation <= 0 %}
-        <p style="color: green; font-weight: bold;">
-            Réservation effectué avec succès !
+    <!-- 🌈 Header -->
+    <div class="header">
+        <div class="header-left">
+            
+            <h3>👤Hello, {{club['name']}}</h3>
+        </div>
+
+        <div class="header-right">
+            <div class="points-card">
+                <h3>Points disponibles : <span>{{club['points']}}</span></h3>
+            </div>
+            <a href="{{url_for('logout')}}" class="logout">Logout</a>
+        </div>
+    </div>
+
+    <!-- 🎟️ Booking form -->
+    <div class="container" style="margin-top: 40px;">
+        <h2>🎫 Réservation - {{competition['name']}}</h2>
+        <p class="info">
+            Places disponibles : <strong>{{competition['numberOfPlaces']}}</strong> <br>
+            Vos points : <strong>{{club['points']}}</strong>
         </p>
-        <p style="color: darkred; font-weight: bold;">
-            Compétition maintenant complète ! Vous pouvez retourner sur la page d'acceuil
-        </p>
-        <a href="{{ url_for('welcome') }}"><button>Retour</button></a>
 
+        {% set max_reservation = [club['points']|int, competition['numberOfPlaces']|int, 12]|min %}
 
-
-    
-    {% else %}
-    <form action="/purchasePlaces" method="post">
-        <input type="hidden" name="club" value="{{club['name']}}">
-        <input type="hidden" name="competition" value="{{competition['name']}}">
-        
-        <label for="places">How many places?</label>
-        <input type="number" name="places" id="places" 
-                min="1" max="{{ max_reservation }}" required>
-         <!-- <p style="color: red">Vous ne pouvez pas réserver plus de {{ max_reservation }} place{{ max_reservation > 1 and 's' or '' }}.</p> -->
-       <!--  message de confirmation -->
-                {% with messages = get_flashed_messages()%}
-                    {% if messages %}
-                        <!-- <ul> -->
-                    <ul style="color: green; font-weight: bold;">
-                    {% for message in messages %}
-                            <li>{{message}}</li>
+        {% if max_reservation <= 0 %}
+           
+              
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <ul class="messages">
+                        {% for category, message in messages %}
+                            <li class="{{category}}">{{ message }}</li>
                         {% endfor %}
                     </ul>
-                    {% endif%}
-                {%endwith%}
+                {% endif %}
+                {% endwith %}
 
-        <!-- Bouton pour réserver -->
-        <button type="submit" name="action_type" value="purshase">Book</button>
-        <!-- Nouvelle fontionnalité: ajout de bouton retour -->
-        <button type="submit" name="action_type" value="return" id="returnbutton">Retour</button>
-           
-    </form>
+                 <p style="color: darkred; font-weight: bold;">
+                Vous ne pouvez plus réserver de places.<br>
+                (Pas assez de points.)
+            </p>
+            <a href="{{ url_for('welcome') }}">
+                <button type="button">Retour</button>
+            </a>
+        {% else %}
+            <form action="/purchasePlaces" method="post">
+                <input type="hidden" name="club" value="{{club['name']}}">
+                <input type="hidden" name="competition" value="{{competition['name']}}">
+                
+                <label for="places">Combien de places souhaitez-vous réserver ?</label>
+                <input type="number" name="places" id="places" min="1" max="{{max_reservation}}" required>
+                
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <ul class="messages">
+                        {% for category, message in messages %}
+                            <li class="{{category}}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                {% endwith %}
+                
+                <button type="submit" name="action_type" value="purshase">Réserver</button>
+                <button type="submit" name="action_type" value="return" id="returnbutton">Retour</button>
+            </form>
+        {% endif %}
+    </div>
 
     <script>
         const returnbutton = document.getElementById('returnbutton');
         const placesinput = document.getElementById('places');
-        returnbutton.addEventListener('click', function(){
-            // Retire la contrainte "required" uniquement pour ce clic
-            placesinput.removeAttribute('required');
-        });
+        if (returnbutton) {
+            returnbutton.addEventListener('click', function(){
+                placesinput.removeAttribute('required');
+            });
+        }
     </script>
-    {% endif %}
 </body>
 </html>
