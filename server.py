@@ -30,6 +30,12 @@ def showSummary():
     return render_template('welcome.html',club=club,competitions=competitions)
 
 
+@app.route('/welcome')
+def welcome():
+    club = clubs[0]  # ou récupérez le club depuis la session
+    return render_template('welcome.html', club=club, competitions=competitions)
+
+
 @app.route('/book/<competition>/<club>')
 def book(competition,club):
     foundClub = [c for c in clubs if c['name'] == club][0]

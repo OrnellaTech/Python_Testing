@@ -9,6 +9,14 @@
     Places available: {{competition['numberOfPlaces']}}
     {% set max_reservation = [club['points']|int, competition['numberOfPlaces']|int,12]|min %}
 
+    {% if max_reservation <= 0 %}
+        <p style="color: darkred; font-weight: bold;">
+            Vous ne pouvez plus réserver de places.
+            Pas assez de points ou plus de places disponibles.
+        </p>
+        <a href="{{ url_for('welcome') }}"><button>Retour</button></a>
+        
+    {% else %}
     <form action="/purchasePlaces" method="post">
         <input type="hidden" name="club" value="{{club['name']}}">
         <input type="hidden" name="competition" value="{{competition['name']}}">
@@ -43,6 +51,6 @@
             placesinput.removeAttribute('required');
         });
     </script>
-
+    {% endif %}
 </body>
 </html>
