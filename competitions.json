@@ -9,6 +9,16 @@
             "name": "Fall Classic",
             "date": "2020-10-22 13:30:00",
             "numberOfPlaces": "13"
+        },
+        {
+            "name": "Fall Classic",
+            "date": "2024-10-22 13:30:00",
+            "numberOfPlaces": "13"
+        },
+        {
+            "name": "Competition de Noël",
+            "date": "2025-12-25 10:30:00",
+            "numberOfPlaces": "28"
         }
     ]
 }
