@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des clubs | GUDLFT</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* 🌸 Header style */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(90deg, #d46aff, #8e8aff, #74d9ff);
+            padding: 15px 30px;
+            color: #fff;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        .header-left h3 {
+            font-weight: 500;
+            font-size: 18px;
+        }
+        .header-right a.login {
+            background-color: #4CAF50;
+            color: #fff;
+            padding: 8px 14px;
+            border-radius: 20px;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+        .header-right a.login:hover {
+            background-color: #3e8e41;
+        }
+
+        /* 💫 Competitions section */
+        .section-title {
+            text-align: center;
+            font-size: 31px;
+            font-weight: 600;
+            color: #444;
+            margin-top: 20px;
+            position: relative;
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #74d9ff, #8e8aff, #d46aff);
+            border-radius: 2px;
+        }
+
+        /* 🏆 Table style */
+        .club-list {
+            max-width: 700px;
+            margin: 40px auto;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+        .club-list h2 {
+            text-align: center;
+            color: #444;
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+        th {
+            background: linear-gradient(90deg, #74d9ff, #8e8aff, #d46aff);
+            color: #fff;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        tr:hover {
+            background-color: #eef6ff;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 🌈 Header -->
+    <div class="header">
+        <div class="header-left">
+            <h3>🏋️‍♀️ GUDLFT - Liste des clubs</h3>
+        </div>
+        <div class="header-right">
+            <a href="{{ url_for('index') }}" class="login">Login</a>
+        </div>
+    </div>
+
+     
+    <h2 class="section-title" style="margin-top: 40px;">🏆 WELCOME !</h2>
+    <!-- 💫 Club list -->
+    <div class="club-list">
+        <h2>📋 Listes des clubs de sport</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nom du club</th>
+                    <th>Email</th>
+                    <th>Points disponibles</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for club in clubs %}
+                <tr>
+                    <td>{{ club['name'] }}</td>
+                    <td>{{ club['email'] }}</td>
+                    <td><strong style="color:#4CAF50">{{ club['points'] }}</strong></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+      
+    </div>
+
+      
+
+</body>
+</html>

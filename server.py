@@ -56,6 +56,9 @@ def welcome():
 #     club = [c for c in clubs if c['name'] == club_name][0]
 #     return render_template('welcome.html', club=club, competitions=competitions)
 
+@app.route('/clubs')
+def displayClubs():
+    return render_template('club_displays.html', clubs=clubs)
 
 
 @app.route('/purchasePlaces',methods=['POST'])
