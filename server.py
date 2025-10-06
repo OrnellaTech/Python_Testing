@@ -54,7 +54,7 @@ def purchasePlaces():
         flash('Great-booking complete!')
         return render_template('booking.html', club=club, competition=competition)
     elif action_type == "return":
-        flash("Retour à la page d'accueil")
+        # flash("Retour à la page d'accueil")
         return render_template('welcome.html', club=club, competitions=competitions)
     else:
         flash('Action inconnue')

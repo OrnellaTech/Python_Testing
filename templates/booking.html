@@ -16,6 +16,18 @@
         <input type="number" name="places" id="places" 
                 min="1" max="{{ max_reservation }}" required>
         
+         <!--  message de confirmation -->
+        {% with messages = get_flashed_messages()%}
+            {% if messages %}
+                <!-- <ul> -->
+            <ul style="color: green; font-weight: bold;">
+            {% for message in messages %}
+                    <li>{{message}}</li>
+                {% endfor %}
+            </ul>
+            {% endif%}
+        {%endwith%}
+
         <!-- Bouton pour réserver -->
         <button type="submit" name="action_type" value="purshase">Book</button>
         <!-- Nouvelle fontionnalité: ajout de bouton retour -->
@@ -31,6 +43,6 @@
             placesinput.removeAttribute('required');
         });
     </script>
-    
+
 </body>
 </html>
