@@ -109,6 +109,21 @@
         .form-container .club-list-link:hover {
             text-decoration: underline;
         }
+          .messages {
+        list-style: none;
+        padding: 0;
+        margin: 10px 0;
+    }
+    .messages li.error {
+        color: red;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+    .messages li.success {
+        color: green;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
     </style>
 </head>
 <body>
@@ -127,19 +142,29 @@
         <div class="form-container">
             <h1>Welcome!</h1>
             <p>Please enter your secretary email to continue:</p>
-            <form action="{{ url_for('showSummary') }}" method="post">
+            <form action="{{ url_for('index') }}" method="post">
                 <label for="email">Email:</label>
                 <input type="email" name="email" id="email" required>
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <ul class="messages">
+                        {% for category, message in messages %}
+                            <li class="{{category}}">{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                {% endwith %}
                 <button type="submit">Enter</button>
             </form>
 
           
-        <div style="margin-top: 25px; text-align: center;">
-            <a class="club-list-link" href="{{ url_for('displayClubs') }}"
-               style="color: rgb(212, 16, 189); padding: 10px 20px; border-radius: 8px; font-weight: 500; transition: 0.3s; text-decoration: underline;">
-                Consulter la liste des clubs sans login
-            </a>
-        </div>
+       <div style="margin-top: 30px; text-align: center;">
+    <a class="club-list-link" href="{{ url_for('displayClubs') }}"
+       style="color: rgb(212, 16, 189); padding: 12px 25px; border-radius: 8px; font-weight: 500; transition: 0.3s; text-decoration: underline; display: inline-block;">
+        Consulter la liste des clubs sans login
+    </a>
+</div>
+
     </div>
 </div>
 </body>

@@ -20,19 +20,29 @@ app.secret_key = 'something_special'
 competitions = loadCompetitions()
 clubs = loadClubs()
 
-@app.route('/')
-def index(): 
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    if request.method == 'POST':
+        email = request.form['email']
+        club = [c for c in clubs if c['email'] == email]
+        if not club:
+            flash("❌ Email incorrect. Accès refusé", "error")
+            return redirect(url_for('index'))
+        else:
+            # Email correct, redirige vers la page welcome
+            return redirect(url_for('showSummary',  email=email))
     return render_template('index.html')
 
-@app.route('/showSummary',methods=['POST'])
+
+@app.route('/showSummary')
 def showSummary():
-    club = [club for club in clubs if club['email'] == request.form['email']][0]
-    
-
-    # Lors de showSummary
-    session['club_name'] = club['name']
-
-    return render_template('welcome.html',club=club,competitions=competitions)
+    email = request.args.get('email')
+    club = [c for c in clubs if c['email'] == email]
+    if not club:
+        flash("❌ Email incorrect. Accès refusé", "error")
+        return redirect(url_for('index'))
+    club = club[0]  # récupère le dictionnaire du club
+    return render_template('welcome.html', club=club, competitions=competitions)
 
 
 @app.route('/book/<competition>/<club>')
@@ -50,15 +60,11 @@ def welcome():
     club = clubs[0]  # ou tu peux récupérer depuis session si besoin
     return render_template('welcome.html', club=club, competitions=competitions)
 
-# @app.route('/welcome')
-# def welcome():
-#     club_name = session.get('club_name', clubs[0]['name'])
-#     club = [c for c in clubs if c['name'] == club_name][0]
-#     return render_template('welcome.html', club=club, competitions=competitions)
-
 @app.route('/clubs')
 def displayClubs():
     return render_template('club_displays.html', clubs=clubs)
+
+
 
 
 @app.route('/purchasePlaces',methods=['POST'])
