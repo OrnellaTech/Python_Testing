@@ -17,6 +17,11 @@
             Number of Places: {{comp['numberOfPlaces']}}
             {%if comp['numberOfPlaces']|int >0%}
             <a href="{{ url_for('book',competition=comp['name'],club=club['name']) }}">Book Places</a>
+            {%else%}
+            <p style="color: darkred; font-weight: bold;">
+            Vous ne pouvez pas réserver de places.
+            Pas assez de points pour y accéder ou plus de places disponibles.
+            </p>
             {%endif%}
         </li>
         <hr />
