@@ -100,7 +100,7 @@
         /* 🧩 Dashboard */
         .dashboard {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 20px;
             margin: 30px;
         }
@@ -171,20 +171,29 @@
         <div class="competition-card">
             <h4>{{comp['name']}}</h4>
             <p><strong>Date:</strong> {{comp['date']}}</p>
-            <p><strong>Places restantes:</strong> {{comp['numberOfPlaces']}}</p>
             
-            {% if comp['numberOfPlaces']|int > 0 %}
-                <a href="{{ url_for('book',competition=comp['name'],club=club['name']) }}" class="btn-book">
-                    Réserver
-                </a>
-            {% elif comp['numberOfPlaces']|int == 0 %}
+            
+        {% if comp['numberOfPlaces']|int > 0 and club['points']|int > 0 and date_actuelle <= comp['date_obj'] %}
+            <p><strong>Places restantes:</strong> {{comp['numberOfPlaces']}}</p>
+            <a href="{{ url_for('book', competition=comp['name'], club=club['name']) }}" class="btn-book">
+                Réserver
+            </a>
+        {% else %}
+            {% if comp['numberOfPlaces']|int == 0 %}
                 <img src="{{ url_for('static', filename='images/complet.png') }}" alt="Complet" class="complete-badge">
                 <p style="color: darkred; font-weight: bold;">Plus de places disponibles</p>
-            {% else %}
-                <img src="{{ url_for('static', filename='images/outdated.png') }}" alt="Date passée" class="outdated-badge">
-                <p style="color: gray; font-weight: bold;">Date passée</p>
             {% endif %}
+            {% if (club['points']|int == 0) and (date_actuelle < comp['date_obj']) %}
+                <p><strong>Places restantes:</strong> {{comp['numberOfPlaces']}}</p>
+                <p style="color: orange; font-weight: bold;">Vous n'avez plus de points</p>
+            {% endif %}
+            {% if date_actuelle > comp['date_obj'] %}
+                <img src="{{ url_for('static', filename='images/outdated.png') }}" alt="Date passée" class="outdated-badge">
+                <p style="color: darkred; font-weight: bold;">Date passée</p>
+            {% endif %}
+        {% endif %}
         </div>
+        
         {% endfor %}
     </div>
 </body>
