@@ -121,7 +121,13 @@ def create_app(config=None):
             elif placesRequired > 12:
                 flash("⚠️ Vous ne pouvez pas réserver plus de 12 places à la fois.", "warning")
             elif placesRequired > club_points:
-                flash("❌ Vous n'avez pas assez de points pour réserver autant de places.", "error")
+# <<<<<<< HEAD
+                # flash("❌ Vous n'avez pas assez de points pour réserver autant de places.", "error")
+# =======
+                # flash("❌ Vous n'avez pas assez de points pour réserver autant de places.", "error")
+                flash("Vous ne pouvez plus réserver de places", "error")
+
+# >>>>>>> test_integration
             else:
                 # ✅ Tout est OK, on met à jour les valeurs dans le dictionnaire en mémoire
                 competition['numberOfPlaces'] = available_places - placesRequired
