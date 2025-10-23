@@ -28,6 +28,8 @@ def can_book_places(competition, club, places_required):
         return True, f"Réservation réussie de {places_required} place(s) !"
 
 
+# --- Dictionnaire global pour suivre les réservations cumulées
+purchased_places_tracker = {}
 
 def create_app(config=None):
     app = Flask(__name__)
@@ -103,9 +105,10 @@ def create_app(config=None):
     def purchasePlaces():
         competition = [c for c in competitions if c['name'] == request.form['competition']][0]
         club = [c for c in clubs if c['name'] == request.form['club']][0]
-        
 
         action_type = request.form.get('action_type')
+
+
 
         if action_type == "purshase":
             # placesRequired = int(request.form['places'])
@@ -115,26 +118,57 @@ def create_app(config=None):
             placesRequired = int(request.form['places'])
             available_places = int(competition['numberOfPlaces'])
             club_points = int(club['points'])
+            
+            # --- Identifier clé unique club/compétition
+            key = (club['name'], competition['name'])
+            current_booked = purchased_places_tracker.get(key, 0)
 
+
+
+#             if placesRequired > available_places:
+#                 flash(f"❌ Il ne reste que {available_places} places disponibles.", "error")
+#             elif placesRequired > 12:
+#                 flash("⚠️ Vous ne pouvez pas réserver plus de 12 places à la fois.", "warning")
+#             elif placesRequired > club_points:
+# # <<<<<<< HEAD
+#                 # flash("❌ Vous n'avez pas assez de points pour réserver autant de places.", "error")
+# # =======
+#                 # flash("❌ Vous n'avez pas assez de points pour réserver autant de places.", "error")
+#                 flash("Vous ne pouvez plus réserver de places", "error")
+
+# # >>>>>>> test_integration
+#             else:
+
+#                 # ✅ Tout est OK, on met à jour les valeurs dans le dictionnaire en mémoire
+#                 competition['numberOfPlaces'] = available_places - placesRequired
+#                 club['points'] = club_points - placesRequired
+#                 purshased_place = purshased_place + placesRequired
+#                 flash(f"✅ Réservation réussie de {placesRequired} place(s) !", "success")
+            
+#             return redirect(url_for('book', competition=competition['name'], club=club['name']))
+
+
+            # --- Vérifications
             if placesRequired > available_places:
                 flash(f"❌ Il ne reste que {available_places} places disponibles.", "error")
-            elif placesRequired > 12:
-                flash("⚠️ Vous ne pouvez pas réserver plus de 12 places à la fois.", "warning")
+
+            elif current_booked + placesRequired > 12:
+                flash("⚠️ Vous ne pouvez pas réserver plus de 12 places sur une seule compétition.", "warning")
+
             elif placesRequired > club_points:
-# <<<<<<< HEAD
-                # flash("❌ Vous n'avez pas assez de points pour réserver autant de places.", "error")
-# =======
-                # flash("❌ Vous n'avez pas assez de points pour réserver autant de places.", "error")
                 flash("Vous ne pouvez plus réserver de places", "error")
 
-# >>>>>>> test_integration
             else:
-                # ✅ Tout est OK, on met à jour les valeurs dans le dictionnaire en mémoire
-                competition['numberOfPlaces'] = available_places - placesRequired
+                # ✅ Mise à jour
+                # competition['numberOfPlaces'] = available_places - placesRequired
+                competition['numberOfPlaces'] = str(int(competition['numberOfPlaces']) - placesRequired)
+
                 club['points'] = club_points - placesRequired
+                purchased_places_tracker[key] = current_booked + placesRequired
                 flash(f"✅ Réservation réussie de {placesRequired} place(s) !", "success")
-            
+
             return redirect(url_for('book', competition=competition['name'], club=club['name']))
+
 
 
         elif action_type == "return":
